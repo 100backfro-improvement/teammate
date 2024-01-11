@@ -10,7 +10,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainGreen: '#A3CCA3'
+        mainGreen: '#5DD68E'
       }
     },
   },

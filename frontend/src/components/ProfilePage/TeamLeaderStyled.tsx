@@ -40,7 +40,7 @@ export const TeamLeaderModal = styled.div`
 export const StyledButton = styled.button`
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #a3cca3;
+  background-color: #5DD68E;
   color: white;
   border: none;
   border-radius: 20px;
