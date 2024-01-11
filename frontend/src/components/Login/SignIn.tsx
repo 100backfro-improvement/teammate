@@ -139,7 +139,7 @@ const SignIn = () => {
         <br />
         <StyledFormItem>
           {isAuthenticated ? (
-            <button onClick={handleLogout}>로그아웃</button>
+            <button onClick={handleLogout} className="bg-mainGreen">로그아웃</button>
           ) : (
             <button onClick={handleSignIn}>로그인</button>
           )}

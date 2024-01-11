@@ -32,7 +32,7 @@ export const StyledFormItem = styled.div`
   button {
     flex: 1;
     padding: 8px;
-    background-color: #a3cca3;
+    background-color: #5DD68E;
     color: #333333;
     cursor: pointer;
 
