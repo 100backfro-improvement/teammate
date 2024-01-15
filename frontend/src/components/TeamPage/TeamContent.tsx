@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axiosInstance from "../../axios";
 import documentImg from "../../assets/document-icon.png";
 import calendarImg from "../../assets/calendar-icon.png";
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 
 const TeamContent = () => {
   // 팀 아이디
@@ -25,7 +26,108 @@ const TeamContent = () => {
   // 팀 문서, 캘린더 경로
   const documentRoute = `/team/${teamId}/documentsList`;
   const calenderRoute = `/team/${teamId}/schedule`;
+  const EventSource = EventSourcePolyfill || NativeEventSource;
+  const accessToken = window.sessionStorage.getItem("accessToken");
 
+  // 팀 알람 부분
+  // 1. 구독
+  let teamAlarm = new EventSource(
+      `http://localhost:8080/notification/subscribe/team/${teamId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'text/event-stream',  // Accept 헤더 추가
+          'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
+          Connection: 'keep-alive',     // Connection 헤더 추가
+        },
+        heartbeatTimeout: 120000,
+        withCredentials: true,
+      }
+  );
+
+  teamAlarm.onmessage = (event) => {
+    const res = event.data;
+    console.log(res);
+  };
+
+  /!* EVENTSOURCE ONERROR ------------------------------------------------------ *!/
+  teamAlarm.onerror = (event) => {
+    console.log(event)
+    teamAlarm.close(); // 기존 연결을 닫고
+    // 새로운 EventSource 객체를 생성하여 다시 연결 시도
+    const newSSE = new EventSource(
+        `http://localhost:8080/notification/subscribe/team/${teamId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'text/event-stream',  // Accept 헤더 추가
+            'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
+            Connection: 'keep-alive',     // Connection 헤더 추가
+          },
+          heartbeatTimeout: 120000,
+          withCredentials: true,
+        }
+    );
+
+    // 새로운 EventSource 객체에 이벤트 핸들러 등록
+    newSSE.onmessage =  (event) => {
+      const res = event.data;
+      console.log(res);
+    };
+
+    // 새로운 EventSource 객체를 현재 SSE 변수에 할당
+    teamAlarm = newSSE;
+  };
+
+
+  // 팀 알람 부분
+  let memberAlarm = new EventSource(
+      `http://localhost:8080/notification/subscribe/member`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'text/event-stream',  // Accept 헤더 추가
+          'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
+          Connection: 'keep-alive',     // Connection 헤더 추가
+        },
+        heartbeatTimeout: 120000,
+        withCredentials: true,
+      }
+  );
+  memberAlarm.onmessage = (event) => {
+    const res = event.data;
+    console.log(res);
+  };
+
+  /!* EVENTSOURCE ONERROR ------------------------------------------------------ *!/
+  memberAlarm.onerror = (event) => {
+    console.log(event)
+    memberAlarm.close(); // 기존 연결을 닫고
+
+    // 새로운 EventSource 객체를 생성하여 다시 연결 시도
+    const newSSE = new EventSource(
+        `http://localhost:8080/notification/subscribe/member`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'text/event-stream',  // Accept 헤더 추가
+            'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
+            Connection: 'keep-alive',     // Connection 헤더 추가
+          },
+          heartbeatTimeout: 120000,
+          withCredentials: true,
+        }
+    );
+
+    // 새로운 EventSource 객체에 이벤트 핸들러 등록
+    newSSE.onmessage = (event) => {
+      const res = event.data;
+      console.log(res);
+    };
+
+    // 새로운 EventSource 객체를 현재 SSE 변수에 할당
+    memberAlarm = newSSE;
+  };
   return (
     <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 bg-white">
       <div className="bg-gray-50 border-gray-200 rounded-lg p-8 md:p-12 mb-8">
