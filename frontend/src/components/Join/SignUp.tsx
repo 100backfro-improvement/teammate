@@ -3,7 +3,6 @@ import {
   StyledContainer,
   StyledFormItem,
   GreenText,
-  StyledText,
   StyledSignUp,
   RedText,
 } from "./SignUpStyled.tsx";
@@ -27,7 +26,6 @@ const SignUp: React.FC<SignUpProps> = () => {
   );
   const [isRePasswordValid, setIsRePasswordValid] = useState<boolean>(true);
   const [signUpMessage, setSignUpMessage] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const isEmailValid = (email: string): boolean =>
@@ -76,7 +74,7 @@ const SignUp: React.FC<SignUpProps> = () => {
       )
       .then(() => {
         setSignUpMessage("회원가입 성공");
-        openModal();
+        navigate("/emailSend");
       })
       .catch((error) => {
         if (error.response && error.response.data.errorCode === TEST) {
@@ -129,13 +127,6 @@ const SignUp: React.FC<SignUpProps> = () => {
           setIsIdAvailable(false);
         }
       });
-  };
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleModalConfirm = () => {
-    setIsModalOpen(false);
-    navigate("/signIn");
   };
 
   return (
@@ -245,12 +236,6 @@ const SignUp: React.FC<SignUpProps> = () => {
       </StyledFormItem>
 
       {signUpMessage && <StyledSignUp>{signUpMessage}</StyledSignUp>}
-      {isModalOpen && (
-        <div>
-          <StyledText>아이디로 이메일 인증을 보냈습니다. </StyledText>
-          <button onClick={handleModalConfirm}>확인</button>
-        </div>
-      )}
     </StyledContainer>
   );
 };

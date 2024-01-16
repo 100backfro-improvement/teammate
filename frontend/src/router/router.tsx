@@ -21,6 +21,7 @@ import TeamLeader from "../components/ProfilePage/TeamLeader";
 import TeamMembers from "../components/ProfilePage/TeamMembers";
 import MyTeamProfile from "../components/MyInfoPage/MyTeamProfile";
 import MyUserProfile from "../components/MyInfoPage/MyUserProfile";
+import EmailSend from "../components/Join/EmailSend";
 // import { v4 as uuidV4 } from "uuid";
 
 const Router = () => {
@@ -35,6 +36,7 @@ const Router = () => {
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/signUp" element={<SignUp />} />
+      <Route path="/emailSend" element={<EmailSend />} />
       <Route path="/signIn" element={<SignInView />} />
       <Route path="/naver" element={<Naver />} />
       <Route path="/social-success/" element={<SocialServiceCallbackPage />} />
