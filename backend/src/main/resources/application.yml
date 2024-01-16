@@ -3,12 +3,11 @@ spring:
     active: dev
 
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: true
     properties:
-      hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8Dialect
     defer-datasource-initialization: true
     database: mysql
