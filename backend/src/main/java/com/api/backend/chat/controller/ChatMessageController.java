@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponses;
 import java.security.Principal;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import reactor.core.scheduler.Schedulers;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
+@Slf4j
 @Api(tags = "채팅")
 @RequiredArgsConstructor
 @RequestMapping("/team/{teamId}/chat")
@@ -63,6 +65,10 @@ public class ChatMessageController {
   ) {
     return chatMessageService
         .findAllByTeamId(Long.valueOf(principal.getName()), teamId)
+        .onErrorResume(e -> {
+          log.error("Error occurred during data retrieval", e);
+          return Flux.empty();
+        })
         .subscribeOn(Schedulers.boundedElastic());
   }
 
