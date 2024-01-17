@@ -86,7 +86,7 @@ public class ChatMessageController {
               , defaultValue = "None", example = "1")
       })
   @PostMapping("")
-  public Mono<ChatMessageDto> setMsg(
+  public Mono<ChatMessageDto> createMsgRequest(
       @RequestBody @Valid
       CreateChatMessageRequest createChatMessageRequest,
       @PathVariable
