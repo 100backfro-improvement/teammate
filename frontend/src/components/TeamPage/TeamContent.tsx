@@ -4,11 +4,12 @@ import axiosInstance from "../../axios";
 import documentImg from "../../assets/document-icon.png";
 import calendarImg from "../../assets/calendar-icon.png";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import LocalNavBar from "../../components/common/LocalNavBar";
 
 const TeamContent = () => {
   // 팀 아이디
   const { teamId } = useParams();
-  
+
   const [teamName, setTeamName] = useState("");
 
   useEffect(() => {
@@ -32,17 +33,17 @@ const TeamContent = () => {
   // 팀 알람 부분
   // 1. 구독
   let teamAlarm = new EventSource(
-      `http://localhost:8080/notification/subscribe/team/${teamId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          Accept: 'text/event-stream',  // Accept 헤더 추가
-          'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
-          Connection: 'keep-alive',     // Connection 헤더 추가
-        },
-        heartbeatTimeout: 120000,
-        withCredentials: true,
-      }
+    `https://www.teammate.digital:8080/notification/subscribe/team/${teamId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "text/event-stream", // Accept 헤더 추가
+        "Cache-Control": "no-cache", // Cache-Control 헤더 추가
+        Connection: "keep-alive", // Connection 헤더 추가
+      },
+      heartbeatTimeout: 120000,
+      withCredentials: true,
+    },
   );
 
   teamAlarm.onmessage = (event) => {
@@ -50,27 +51,27 @@ const TeamContent = () => {
     console.log(res);
   };
 
-  /!* EVENTSOURCE ONERROR ------------------------------------------------------ *!/
+  /!* EVENTSOURCE ONERROR ------------------------------------------------------ *!/;
   teamAlarm.onerror = (event) => {
-    console.log(event)
+    console.log(event);
     teamAlarm.close(); // 기존 연결을 닫고
     // 새로운 EventSource 객체를 생성하여 다시 연결 시도
     const newSSE = new EventSource(
-        `http://localhost:8080/notification/subscribe/team/${teamId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'text/event-stream',  // Accept 헤더 추가
-            'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
-            Connection: 'keep-alive',     // Connection 헤더 추가
-          },
-          heartbeatTimeout: 120000,
-          withCredentials: true,
-        }
+      `https://www.teammate.digital:8080/notification/subscribe/team/${teamId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "text/event-stream", // Accept 헤더 추가
+          "Cache-Control": "no-cache", // Cache-Control 헤더 추가
+          Connection: "keep-alive", // Connection 헤더 추가
+        },
+        heartbeatTimeout: 120000,
+        withCredentials: true,
+      },
     );
 
     // 새로운 EventSource 객체에 이벤트 핸들러 등록
-    newSSE.onmessage =  (event) => {
+    newSSE.onmessage = (event) => {
       const res = event.data;
       console.log(res);
     };
@@ -79,44 +80,43 @@ const TeamContent = () => {
     teamAlarm = newSSE;
   };
 
-
   // 팀 알람 부분
   let memberAlarm = new EventSource(
-      `http://localhost:8080/notification/subscribe/member`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          Accept: 'text/event-stream',  // Accept 헤더 추가
-          'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
-          Connection: 'keep-alive',     // Connection 헤더 추가
-        },
-        heartbeatTimeout: 120000,
-        withCredentials: true,
-      }
+    `https://www.teammate.digital:8080/notification/subscribe/member`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "text/event-stream", // Accept 헤더 추가
+        "Cache-Control": "no-cache", // Cache-Control 헤더 추가
+        Connection: "keep-alive", // Connection 헤더 추가
+      },
+      heartbeatTimeout: 120000,
+      withCredentials: true,
+    },
   );
   memberAlarm.onmessage = (event) => {
     const res = event.data;
     console.log(res);
   };
 
-  /!* EVENTSOURCE ONERROR ------------------------------------------------------ *!/
+  /!* EVENTSOURCE ONERROR ------------------------------------------------------ *!/;
   memberAlarm.onerror = (event) => {
-    console.log(event)
+    console.log(event);
     memberAlarm.close(); // 기존 연결을 닫고
 
     // 새로운 EventSource 객체를 생성하여 다시 연결 시도
     const newSSE = new EventSource(
-        `http://localhost:8080/notification/subscribe/member`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'text/event-stream',  // Accept 헤더 추가
-            'Cache-Control': 'no-cache',  // Cache-Control 헤더 추가
-            Connection: 'keep-alive',     // Connection 헤더 추가
-          },
-          heartbeatTimeout: 120000,
-          withCredentials: true,
-        }
+      `https://www.teammate.digital:8080/notification/subscribe/member`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "text/event-stream", // Accept 헤더 추가
+          "Cache-Control": "no-cache", // Cache-Control 헤더 추가
+          Connection: "keep-alive", // Connection 헤더 추가
+        },
+        heartbeatTimeout: 120000,
+        withCredentials: true,
+      },
     );
 
     // 새로운 EventSource 객체에 이벤트 핸들러 등록
@@ -130,6 +130,7 @@ const TeamContent = () => {
   };
   return (
     <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 bg-white">
+      <LocalNavBar teamId={teamId} />
       <div className="bg-gray-50 border-gray-200 rounded-lg p-8 md:p-12 mb-8">
         <h2 className="text-gray-900 text-3xl md:text-5xl font-extrabold mb-2">
           {teamName}팀의 홈
