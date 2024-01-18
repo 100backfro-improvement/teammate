@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -86,12 +85,12 @@ public class ChatMessageController {
               , defaultValue = "None", example = "1")
       })
   @PostMapping("")
-  public Mono<ChatMessageDto> setMsg(
+  public void createMsgRequest(
       @RequestBody @Valid
       CreateChatMessageRequest createChatMessageRequest,
       @PathVariable
       Long teamId
   ){
-    return chatMessageService.saveMessage(createChatMessageRequest, teamId);
+    chatMessageService.saveMessage(createChatMessageRequest, teamId);
   }
 }

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Service
@@ -31,19 +30,16 @@ public class ChatMessageService {
         .map(ChatMessageDto::from);
   }
 
-  public Mono<ChatMessageDto> saveMessage(CreateChatMessageRequest createChatMessageRequest, Long teamId) {
+  public void saveMessage(CreateChatMessageRequest createChatMessageRequest, Long teamId) {
 
-    Mono<ChatMessageDto> chatMessageDtoMono = chatMessageRepository.save(
+    chatMessageRepository.save(
         ChatMessage.builder()
         .writerId(createChatMessageRequest.getWriterId())
         .message(createChatMessageRequest.getMessage())
         .teamId(teamId)
         .createdDt(LocalDateTime.now())
         .build()
-        )
-        .map(ChatMessageDto::from);
-
-    return chatMessageDtoMono;
+        );
   }
 }
 
