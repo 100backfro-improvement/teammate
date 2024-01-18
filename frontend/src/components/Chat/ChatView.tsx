@@ -2,6 +2,7 @@
 import axiosInstance from "../../axios";
 import { useEffect, useState } from "react";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+import { SSEPath } from "../../common/PathURL";
 
 const ChatView = ({ teamId, myTeamMemberId }: any) => {
   const accessToken = window.sessionStorage.getItem("accessToken");
@@ -9,19 +10,16 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
 
   useEffect(() => {
     // 구독
-    const teamChat = new EventSource(
-      `https://www.teammate.digital:8080/team/${teamId}/chat`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          // Accept: "text/event-stream", // Accept 헤더 추가
-          // "Cache-Control": "no-cache", // Cache-Control 헤더 추가
-          // Connection: "keep-alive", // Connection 헤더 추가
-        },
-        heartbeatTimeout: 120000,
-        withCredentials: true,
+    const teamChat = new EventSource(`${SSEPath}/team/${teamId}/chat`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        // Accept: "text/event-stream", // Accept 헤더 추가
+        // "Cache-Control": "no-cache", // Cache-Control 헤더 추가
+        // Connection: "keep-alive", // Connection 헤더 추가
       },
-    );
+      heartbeatTimeout: 120000,
+      withCredentials: true,
+    });
 
     teamChat.onmessage = (event) => {
       const res = event.data;
