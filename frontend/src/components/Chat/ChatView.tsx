@@ -1,87 +1,42 @@
-// import { accessTokenState } from "../../state/authState";
-// import { useRecoilValue } from "recoil";
-import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
+// import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 import axiosInstance from "../../axios";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 
-const ChatView = ({ teamId }: any) => {
+const ChatView = ({ teamId, myTeamMemberId }: any) => {
   const accessToken = window.sessionStorage.getItem("accessToken");
   const EventSource = EventSourcePolyfill || NativeEventSource;
 
-  // 현재 페이지의 사용자 팀 멤버 Id(participant)
-  const [myTeamMemberId, setMyTeamMemberId] = useState<number | undefined>(
-    undefined,
-  );
-
   useEffect(() => {
-    const fetchMyTeamMemberId = async () => {
-      try {
-        // 사용자가 속해있는 팀 목록과 닉네임등의 정보를 불러옴
-        const response = await axiosInstance.get("/member/participants", {});
-        // 사용자가 가입한 팀 목록중에 현재 팀id의 정보와 맞는 팀 내 내정보 값만 가져옴
-        const myTeamMemberInfo = response.data.find(
-          (item: { teamId: number }) => item.teamId === Number(teamId),
-        );
-        const authorTeamMemberId = myTeamMemberInfo.teamParticipantsId;
-        setMyTeamMemberId(authorTeamMemberId);
-        // console.log("작성자 팀멤버 아이디 -> ",myTeamMemberId);
-      } catch (error) {
-        console.error("Error fetching participants:", error);
-      }
-    };
-
-    fetchMyTeamMemberId();
-  }, [teamId]);
-
-  // 구독
-  let teamChat = new EventSource(
-    `https://www.teammate.digital:8080/team/${teamId}/chat`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "text/event-stream", // Accept 헤더 추가
-        "Cache-Control": "no-cache", // Cache-Control 헤더 추가
-        Connection: "keep-alive", // Connection 헤더 추가
-      },
-      heartbeatTimeout: 120000,
-      withCredentials: true,
-    },
-  );
-
-  teamChat.onmessage = (event) => {
-    const res = event.data;
-    console.log(res);
-  };
-
-  // ------------------추가 시작
-  teamChat.onerror = (event) => {
-    console.log(event);
-    teamChat.close(); // 기존 연결을 닫고
-    // 새로운 EventSource 객체를 생성하여 다시 연결 시도
-    const newSSE = new EventSource(
+    // 구독
+    const teamChat = new EventSource(
       `https://www.teammate.digital:8080/team/${teamId}/chat`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          Accept: "text/event-stream", // Accept 헤더 추가
-          "Cache-Control": "no-cache", // Cache-Control 헤더 추가
-          Connection: "keep-alive", // Connection 헤더 추가
+          // Accept: "text/event-stream", // Accept 헤더 추가
+          // "Cache-Control": "no-cache", // Cache-Control 헤더 추가
+          // Connection: "keep-alive", // Connection 헤더 추가
         },
         heartbeatTimeout: 120000,
         withCredentials: true,
       },
     );
 
-    // 새로운 EventSource 객체에 이벤트 핸들러 등록
-    newSSE.onmessage = (event) => {
+    teamChat.onmessage = (event) => {
       const res = event.data;
       console.log(res);
     };
 
-    // 새로운 EventSource 객체를 현재 SSE 변수에 할당
-    teamChat = newSSE;
-  };
-  // -------------------추가 끝
+    teamChat.onerror = () => {
+      //에러 발생시 할 동작
+      teamChat.close(); //연결 끊기
+    };
+
+    return () => {
+      teamChat.close();
+    };
+  }, []);
 
   // 채팅 입력값
   const [inputChange, setInputChange] = useState("");
