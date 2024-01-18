@@ -8,7 +8,7 @@ spring:
       - classpath:application-oauth.yml
       - classpath:application-ssl.yml
   jpa:
-    open-in-view: true
+    open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: true

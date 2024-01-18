@@ -53,7 +53,7 @@ public class TeamParticipants extends BaseEntity {
   @Builder.Default
   private List<Notification> notifications = new ArrayList<>();
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "team_id")
   private Team team;
 
