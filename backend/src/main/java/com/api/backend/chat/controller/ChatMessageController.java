@@ -2,6 +2,7 @@ package com.api.backend.chat.controller;
 
 import com.api.backend.chat.data.dto.ChatMessageDto;
 import com.api.backend.chat.data.dto.CreateChatMessageRequest;
+import com.api.backend.chat.data.entity.ChatMessage;
 import com.api.backend.chat.service.ChatMessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -85,12 +87,12 @@ public class ChatMessageController {
               , defaultValue = "None", example = "1")
       })
   @PostMapping("")
-  public void createMsgRequest(
+  public Mono<ChatMessage> createMsgRequest(
       @RequestBody @Valid
       CreateChatMessageRequest createChatMessageRequest,
       @PathVariable
       Long teamId
   ){
-    chatMessageService.saveMessage(createChatMessageRequest, teamId);
+    return chatMessageService.saveMessage(createChatMessageRequest, teamId);
   }
 }
