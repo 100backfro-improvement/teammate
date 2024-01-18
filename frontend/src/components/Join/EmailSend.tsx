@@ -37,6 +37,7 @@ const StyledTitle = styled.h2`
   font-weight: bold;
   margin-top: 60px;
   margin-bottom: 20px;
+  color: #333333;
 `;
 
 const StyledText = styled.p`
