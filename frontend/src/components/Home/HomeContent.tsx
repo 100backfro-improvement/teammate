@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useRecoilValue, useRecoilState } from "recoil";
 import axiosInstance from "../../axios";
 import { useNavigate } from "react-router-dom";
-import move from "../../assets/move.png";
 import styled from "styled-components";
 import {
   searchState,
@@ -12,7 +11,7 @@ import {
 } from "../../state/authState";
 import { Team } from "../../interface/interface.ts";
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 6;
 
 interface PageNumberProps {
   isSelected: boolean;
@@ -91,33 +90,40 @@ const HomeContent = () => {
   };
 
   return (
-    <TeamListContainer>
-      {currentTeams.map((team, index) => (
-        <TeamItem key={index}>
-          <TeamCard
-            onClick={() => {
-              if (team.restorationDt !== null) {
-                return;
-              }
-              navigate(`/team/${team.teamId}`, {
-                state: { team },
-              });
-            }}
-          >
-            {team.profileUrl && (
-              <TeamImage src={team.profileUrl} alt={`${team.name} 이미지`} />
-            )}
-            <TeamName>{team.name}</TeamName>
-            {team.restorationDt !== null ? (
-              <RestorationButton onClick={() => handleRestoration(team.teamId)}>
-                복구
-              </RestorationButton>
-            ) : (
-              <MoveImg src={move} alt="move" />
-            )}
-          </TeamCard>
-        </TeamItem>
-      ))}
+    <>
+      <TeamListContainer>
+        {currentTeams.map((team, index) => (
+          <TeamItem key={index}>
+            <TeamCard
+              onClick={() => {
+                if (team.restorationDt !== null) {
+                  return;
+                }
+                navigate(`/team/${team.teamId}`, {
+                  state: { team },
+                });
+              }}
+            >
+              <TeamContent>
+                {team.profileUrl && (
+                  <TeamImage
+                    src={team.profileUrl}
+                    alt={`${team.name} 이미지`}
+                  />
+                )}
+                <TeamName>{team.name}</TeamName>
+              </TeamContent>
+              {team.restorationDt !== null ? (
+                <Button onClick={() => handleRestoration(team.teamId)}>
+                  복구하기
+                </Button>
+              ) : (
+                <Button>참여하기</Button>
+              )}
+            </TeamCard>
+          </TeamItem>
+        ))}
+      </TeamListContainer>
       <Pagination>
         {Array.from({
           length: Math.ceil(filteredTeamList.length / ITEMS_PER_PAGE),
@@ -131,52 +137,42 @@ const HomeContent = () => {
           </PageNumber>
         ))}
       </Pagination>
-    </TeamListContainer>
+    </>
   );
 };
 
 export default HomeContent;
 
 const TeamListContainer = styled.div`
-  margin-top: 10px;
+  position: absolute;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 5px;
+  gap: 16px;
   padding: 8px;
-  padding-top: 50px;
-
-  @media (max-width: 600px) {
-    width: 100%;
-    justify-content: center;
-  }
+  margin-top: 24px;
 `;
 
 const TeamItem = styled.li`
-  width: 60%;
   list-style: none;
-  margin: 0 auto;
-  margin-bottom: 8px;
-
-  @media (max-width: 600px) {
-    width: 100%;
-  }
+  margin-bottom: 16px;
 `;
 
 const TeamCard = styled.div`
   font-weight: bold;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
   border: 1px solid #ccc;
-  border-radius: 15px;
   padding: 12px;
   transition: transform 0.2s ease-in-out;
-  height: auto;
+  height: 150px;
+  width: 250px;
 
   &:hover {
     transform: scale(1.05);
-    color: #a3cca3;
+    color: #5dd68e;
   }
 
   @media (max-width: 600px) {
@@ -185,8 +181,13 @@ const TeamCard = styled.div`
   }
 `;
 
+const TeamContent = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const TeamName = styled.h3`
-  margin: 0;
+  margin: 16px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -197,12 +198,13 @@ const TeamImage = styled.img`
   width: 50px;
   height: 50px;
   border-radius: 15px;
-  margin: 0 16px 0 8px;
+  margin: 16px;
   object-fit: cover;
 `;
 
 const Pagination = styled.div`
   display: flex;
+  margin-top: 400px;
   justify-content: center;
   width: 100%;
   height: 30px;
@@ -226,30 +228,31 @@ const PageNumber = styled.div<PageNumberProps>`
   padding: 4px;
 
   &:hover {
-    background-color: #5DD68E;
+    background-color: #5dd68e;
   }
 `;
 
-const RestorationButton = styled.button`
-  background-color: #5DD68E;
-  color: white;
-  border: none;
+const Button = styled.span`
+  color: #555555;
+  border: 1px solid #cccccc;
+  width: 90%;
   padding: 6px 12px;
-  border-radius: 4px;
-  margin-right: 8px;
-  cursor: pointer;
+  text-align: center;
+  margin: 0 auto;
+  cursor: ${({ children }) =>
+    children === "복구하기" ? "pointer" : "default"};
+  color: ${({ children }) => (children === "복구하기" ? "red" : "#555555")};
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 
   &:hover {
-    background-color: #cccccc;
+    background-color: ${({ children }) =>
+      children === "참여하기" ? "#5dd68e" : "transparent"};
+    color: ${({ children }) => (children === "참여하기" ? "white" : "red")};
   }
 
   @media (max-width: 600px) {
     order: -1;
   }
-`;
-
-const MoveImg = styled.img`
-  width: 20px;
-  height: 20px;
-  margin-right: 20px;
 `;

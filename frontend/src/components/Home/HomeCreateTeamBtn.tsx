@@ -1,10 +1,24 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useState } from "react";
 import axiosInstance from "../../axios";
-import AlarmModal from "../alarm/PersonalAlarmModal";
+import { useState, useEffect } from "react";
 
 export default function HomeCreateTeamBtn() {
+  const [teamListLength, setTeamListLength] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get("/team/list");
+        setTeamListLength(response.data.length);
+      } catch (error: any) {
+        console.error("Error:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+  //
   const [inviteCode, setInviteCode] = useState("");
 
   const handleInputInviteCode = (event: any) => {
@@ -27,7 +41,7 @@ export default function HomeCreateTeamBtn() {
         if (error.response) {
           switch (error.response.status) {
             case 401:
-              alert("토큰 값이 유효하지 않습니다.");
+              alert("존재하지 않는 초대코드입니다.");
               break;
             case 404:
               alert("팀이 해체되었습니다.");
@@ -51,67 +65,33 @@ export default function HomeCreateTeamBtn() {
       });
   };
 
-  //알람모달
-  const [isModalOpen, setModalOpen] = useState(false);
-
-  const handleNotificationClick = () => {
-    setModalOpen(!isModalOpen);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
-
   return (
     <>
       <CenteredContainer>
+        <TeamInfo>
+          팀<TeamCount>{teamListLength}</TeamCount>
+        </TeamInfo>
+        <TeamInviteContainer>
+          <TeamInvite>
+            <input
+              type="text"
+              placeholder="초대코드를 입력하세요"
+              value={inviteCode}
+              onChange={handleInputInviteCode}
+            />
+          </TeamInvite>
+          <CreateTeamButton onClick={handleCreateTeam}>참가</CreateTeamButton>
+        </TeamInviteContainer>
         <Link to="/teamInfo">
-          <CreateTeamButton>+ 팀 생성하기</CreateTeamButton>
+          <CreateTeamButton>팀 만들기</CreateTeamButton>
         </Link>
-        <TeamInvite>
-          <input
-            type="text"
-            placeholder="초대코드를 입력하세요"
-            value={inviteCode}
-            onChange={handleInputInviteCode}
-          />
-        </TeamInvite>
-        <CreateTeamButton onClick={handleCreateTeam}>참가</CreateTeamButton>
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <AlarmButton
-              className="btn btn-ghost btn-circle"
-              onClick={handleNotificationClick}
-              aria-label="알림 보기"
-            >
-              <div className="indicator">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-                {/* <span className="badge badge-xs badge-primary indicator-item"></span> */}
-              </div>
-            </AlarmButton>
-            {isModalOpen && <AlarmModal closeModal={closeModal} />}{" "}
-          </li>
-        </ul>
       </CenteredContainer>
     </>
   );
 }
 
 const CenteredContainer = styled.div`
-  margin: 20px 0 10px 0;
+  margin: 25px 0 10px 0;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -120,27 +100,25 @@ const CenteredContainer = styled.div`
   }
 `;
 
-const CreateTeamButton = styled.button`
-  padding: 8px 16px;
-  background-color: #5dd68e;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+const TeamInfo = styled.span`
+  color: #333333;
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+`;
 
-  &:hover {
-    background-color: #cccccc;
-  }
-  @media (max-width: 600px) {
-    margin-top: 10px;
-  }
+const TeamCount = styled.span`
+  margin-left: 4px;
+  font-size: 20px;
+  color: #555555;
+  margin-right: 400px;
 `;
 
 const TeamInvite = styled.span`
   position: relative;
   padding: 5px;
-  margin-right: 5px;
-  margin-left: 30px;
+  margin-right: 10px;
+  margin-left: 5px;
   @media (max-width: 600px) {
     margin-top: 10px;
   }
@@ -148,7 +126,8 @@ const TeamInvite = styled.span`
   input {
     outline: none;
     border: none;
-    width: 150px;
+    width: 130px;
+    font-size: 14px;
   }
 
   &:before {
@@ -162,20 +141,23 @@ const TeamInvite = styled.span`
   }
 `;
 
-const AlarmButton = styled.button`
-  margin-left: 65px;
-  margin-right: 100px;
-  padding: 5px;
-  background-color: transparent;
+const TeamInviteContainer = styled.span`
+  padding: 6px;
+  border-radius: 8px;
+`;
+
+const CreateTeamButton = styled.button`
+  padding: 8px 16px;
+  margin-right: 15px;
+  background-color: #5dd68e;
+  color: white;
   border: none;
   cursor: pointer;
-  &:focus {
-    outline: none;
-  }
 
-  svg {
-    width: 30px;
-    height: auto;
-    stroke: #555555;
+  &:hover {
+    background-color: #cccccc;
+  }
+  @media (max-width: 600px) {
+    margin-top: 10px;
   }
 `;
