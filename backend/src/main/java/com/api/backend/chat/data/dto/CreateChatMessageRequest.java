@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
+@ToString
 public class CreateChatMessageRequest {
 
   @NotNull(message = "채팅 메시지가 비어있습니다.")

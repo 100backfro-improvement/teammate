@@ -78,7 +78,6 @@ public class NotificationController {
               paramType = "path", defaultValue = "None", example = "1"
           )
       })
-
   @GetMapping(value = "/team/{teamId}")
   public ResponseEntity<Page<NotificationsResponse>> getTeamNotificationListRequest(
       @ApiIgnore Principal principal,
@@ -164,9 +163,7 @@ public class NotificationController {
             notificationId,
             teamParticipantsId,
             Long.valueOf(principal.getName())
-
         );
-
     return ResponseEntity.ok().build();
   }
 }
