@@ -35,9 +35,9 @@ import springfox.documentation.annotations.ApiIgnore;
 public class ChatMessageController {
 
   private final ChatMessageService chatMessageService;
-  @ApiOperation(value = "해당 팀의 채팅 내용을 반환합니다.")
+  @ApiOperation(value = "해당 팀의 오늘 날짜 채팅 내용을 반환하고, 구독을 유지합니다.")
   @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "해당 채팅 내용을 가져왔습니다."),
+      @ApiResponse(code = 200, message = "채팅 내용을 지속적으로 가져옵니다."),
       @ApiResponse(code = 400, message = "CustomException을 반환합니다."),
   })
   @ApiImplicitParams(
@@ -63,9 +63,9 @@ public class ChatMessageController {
         .subscribeOn(Schedulers.boundedElastic());
   }
 
-  @ApiOperation(value = "해당 팀의 채팅 내용을 반환합니다.")
+  @ApiOperation(value = "해당 팀의 날짜기반 채팅 내용을 반환합니다.")
   @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "해당 채팅 내용을 가져왔습니다."),
+      @ApiResponse(code = 200, message = "해당 채팅 날짜기반 내용을 가져왔습니다."),
       @ApiResponse(code = 400, message = "CustomException을 반환합니다."),
   })
   @ApiImplicitParams(
