@@ -3,6 +3,7 @@ import axiosInstance from "../../axios";
 import { useEffect, useRef, useState } from "react";
 import { EventSourcePolyfill, NativeEventSource } from "event-source-polyfill";
 import { SSEPath } from "../../common/PathURL";
+import ChatBubble from "./ChatBubble";
 
 const ChatView = ({ teamId, myTeamMemberId }: any) => {
   const accessToken = window.sessionStorage.getItem("accessToken");
@@ -59,6 +60,7 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
   };
 
   const newChat = async () => {
+    setInputChange("");
     try {
       const res = await axiosInstance.post(`/team/${teamId}/chat`, {
         message: inputChange,
@@ -78,7 +80,8 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
           채팅
         </h5>
-        <div className="p-3 mb-3 h-[32rem] font-normal bg-gray-50 text-gray-700">
+        <ChatBubble messages={messages} myTeamMemberId={myTeamMemberId} />
+        {/* <div className="p-3 mb-3 h-[32rem] overflow-y-auto font-normal bg-gray-50 text-gray-700">
           {messages.map((content, index) => {
             const { writerId, message, createdDt }: any = content;
             return (
@@ -99,18 +102,15 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
                       {message}
                     </p>
                   </div>
-                  {/* <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    Delivered
-                  </span> */}
                 </div>
               </div>
             );
           })}
-        </div>
+        </div> */}
         <input
           value={inputChange}
           onChange={handleInputChange}
-          className="border p-1 mr-1.5 w-72"
+          className="border p-1 mr-1.5 w-72 rounded"
           placeholder="메시지를 입력하세요"
         />
         <button
