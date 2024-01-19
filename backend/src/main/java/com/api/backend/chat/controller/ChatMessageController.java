@@ -67,6 +67,37 @@ public class ChatMessageController {
         .subscribeOn(Schedulers.boundedElastic());
   }
 
+  @ApiOperation(value = "해당 팀의 채팅 내용을 반환합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "해당 채팅 내용을 가져왔습니다."),
+      @ApiResponse(code = 400, message = "CustomException을 반환합니다."),
+  })
+  @ApiImplicitParams(
+      {
+          @ApiImplicitParam(
+              name = "access token", value = "jwt access token", required = true
+              , dataType = "String", paramType = "header", defaultValue = "None"
+          ),
+          @ApiImplicitParam(
+              name = "teamId"
+              , value = "팀 id", required = true, dataType = "Long"
+              , paramType = "path", defaultValue = "None", example = "1"
+          )
+      })
+  @GetMapping(value = "/list", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  public Flux<ChatMessageDto> findByTeamMessageRequest(
+      @ApiIgnore
+      Principal principal,
+      @PathVariable Long teamId,
+      @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+      LocalDate date
+  ) {
+    return chatMessageService
+        .getChatsByDateTime(
+            Long.valueOf(principal.getName()), teamId, date
+        );
+  }
+
   @ApiOperation(value = "채팅 내용을 저장합니다.")
   @ApiResponses(value = {
       @ApiResponse(code = 200, message = "저장한 내용을 가져왔습니다."),

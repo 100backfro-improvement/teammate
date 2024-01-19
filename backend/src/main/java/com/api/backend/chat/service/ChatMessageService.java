@@ -49,5 +49,32 @@ public class ChatMessageService {
         );
     return chatMessageMono;
   }
+
+  public Flux<ChatMessageDto> getChatsByDateTime(Long memberId, Long teamId, LocalDate date) {
+
+    checkParticipant(memberId, teamId);
+
+    LocalDateTime startDatetime = getStartDatetime(date);
+    LocalDateTime endDatetime = getEndDatetime(date);
+
+    return chatMessageRepository.findMessageByDate(
+            teamId, startDatetime, endDatetime
+        )
+        .map(ChatMessageDto::from);
+  }
+
+  private void checkParticipant(Long memberId, Long teamId) {
+    if (!teamParticipantsRepository.existsByTeam_TeamIdAndMember_MemberId(teamId, memberId)) {
+      throw new CustomException(TEAM_PARTICIPANTS_NOT_FOUND_EXCEPTION);
+    }
+  }
+
+  private static LocalDateTime getEndDatetime(LocalDate date) {
+    return LocalDateTime.of(date, LocalTime.of(23, 59, 59));
+  }
+
+  private static LocalDateTime getStartDatetime(LocalDate date) {
+    return LocalDateTime.of(date, LocalTime.of(0, 0, 0));
+  }
 }
 

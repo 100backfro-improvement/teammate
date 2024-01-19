@@ -12,6 +12,10 @@ import reactor.core.publisher.Flux;
 public interface ChatMessageRepository  extends ReactiveMongoRepository<ChatMessage,String> {
   @Tailable
   @Query("{'teamId': ?0, 'createdDt': {'$gt': ?1, '$lte': ?2}}")
-  Flux<ChatMessage> findAllByTeamIdAndCreatedDtBetween(Long teamId, LocalDateTime start, LocalDateTime end);
+  Flux<ChatMessage> subscribeAndFindMessage(Long teamId, LocalDateTime start, LocalDateTime end);
+
+  @Query("{'teamId': ?0, 'createdDt': {'$gt': ?1, '$lte': ?2}}")
+  Flux<ChatMessage> findMessageByDate(Long teamId, LocalDateTime start, LocalDateTime end);
+
 
 }
