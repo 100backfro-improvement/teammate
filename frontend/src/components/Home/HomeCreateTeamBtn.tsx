@@ -80,7 +80,7 @@ const CenteredContainer = styled.div`
 
 const CreateTeamButton = styled.button`
   padding: 8px 16px;
-  background-color: #a3cca3;
+  background-color: #5DD68E;
   color: white;
   border: none;
   border-radius: 10px;

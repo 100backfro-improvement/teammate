@@ -76,8 +76,6 @@ public class NotificationService {
     TeamParticipants teamParticipants = notification.getTeamParticipants();
     Member member = teamParticipants.getMember();
 
-    System.out.println(teamParticipants.getTeamParticipantsId());
-    System.out.println(member.getMemberId());
     if ((!teamParticipants.getTeamParticipantsId()
         .equals(teamParticipantsId)) ||
         (!member.getMemberId()

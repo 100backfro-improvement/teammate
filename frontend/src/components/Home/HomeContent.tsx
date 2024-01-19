@@ -219,19 +219,19 @@ const PageNumber = styled.div<PageNumberProps>`
   cursor: pointer;
   color: ${({ isSelected }) => (isSelected ? "#ffffff" : "#333333")};
   background-color: ${({ isSelected }) =>
-    isSelected ? "#a3cca3" : "transparent"};
+    isSelected ? "#5DD68E" : "transparent"};
 
   border-radius: 50px;
   text-align: center;
   padding: 4px;
 
   &:hover {
-    background-color: #a3cca3;
+    background-color: #5DD68E;
   }
 `;
 
 const RestorationButton = styled.button`
-  background-color: #a3cca3;
+  background-color: #5DD68E;
   color: white;
   border: none;
   padding: 6px 12px;

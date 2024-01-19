@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import mainImage from "../assets/main_image.png";
+import mainImage from "../assets/main_imageChange.png";
 
 const MainContents = () => {
   return (
@@ -47,6 +47,6 @@ export const MainContentsSpan = styled.span`
   }
 
   & > img {
-    max-with: 40%;
+    max-width: 40%;
   }
 `;
