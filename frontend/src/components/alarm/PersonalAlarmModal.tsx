@@ -39,7 +39,7 @@ export default AlarmModal;
 const ModalOverlay = styled.div`
   position: absolute;
   top: 40px;
-  right: -160px;
+  right: -20px;
   width: 320px;
   display: flex;
   justify-content: center;
