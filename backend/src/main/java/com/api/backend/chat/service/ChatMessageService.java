@@ -24,14 +24,14 @@ public class ChatMessageService {
 
   private final ChatMessageRepository chatMessageRepository;
   private final TeamParticipantsRepository teamParticipantsRepository;
-  public Flux<ChatMessageDto> findAllByTeamId(Long memberId, Long teamId) {
+  public Flux<ChatMessageDto> subscribeAndGetMsg(Long memberId, Long teamId) {
 
-    if (!teamParticipantsRepository.existsByTeam_TeamIdAndMember_MemberId(teamId, memberId)) {
-      throw new CustomException(TEAM_PARTICIPANTS_NOT_FOUND_EXCEPTION);
-    }
-    LocalDateTime startDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0));
-    LocalDateTime endDatetime = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59));
-    return chatMessageRepository.findAllByTeamIdAndCreatedDtBetween(
+    checkParticipant(memberId, teamId);
+
+    LocalDateTime startDatetime = getStartDatetime(LocalDate.now());
+    LocalDateTime endDatetime = getEndDatetime(LocalDate.now());
+
+    return chatMessageRepository.subscribeAndFindMessage(
         teamId, startDatetime, endDatetime
         )
         .map(ChatMessageDto::from);
@@ -39,15 +39,14 @@ public class ChatMessageService {
 
   public Mono<ChatMessage> saveMessage(CreateChatMessageRequest createChatMessageRequest, Long teamId) {
 
-    Mono<ChatMessage> chatMessageMono = chatMessageRepository.save(
+    return chatMessageRepository.save(
         ChatMessage.builder()
-        .writerId(createChatMessageRequest.getWriterId())
-        .message(createChatMessageRequest.getMessage())
-        .teamId(teamId)
-        .createdDt(LocalDateTime.now())
-        .build()
-        );
-    return chatMessageMono;
+            .writerId(createChatMessageRequest.getWriterId())
+            .message(createChatMessageRequest.getMessage())
+            .teamId(teamId)
+            .createdDt(LocalDateTime.now())
+            .build()
+    );
   }
 
   public Flux<ChatMessageDto> getChatsByDateTime(Long memberId, Long teamId, LocalDate date) {

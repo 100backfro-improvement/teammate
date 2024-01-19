@@ -11,14 +11,17 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.security.Principal;
+import java.time.LocalDate;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -40,30 +43,23 @@ public class ChatMessageController {
   @ApiImplicitParams(
       {
           @ApiImplicitParam(
-              name = "access token"
-              , value = "jwt access token"
-              , required = true
-              , dataType = "String"
-              , paramType = "header"
-              , defaultValue = "None"
+              name = "access token", value = "jwt access token", required = true
+              , dataType = "String", paramType = "header", defaultValue = "None"
           ),
           @ApiImplicitParam(
               name = "teamId"
-              , value = "팀 id"
-              , required = true
-              , dataType = "Long"
-              , paramType = "path"
-              , defaultValue = "None"
-              , example = "1")
+              , value = "팀 id", required = true, dataType = "Long"
+              , paramType = "path", defaultValue = "None", example = "1"
+          )
       })
   @GetMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-  public Flux<ChatMessageDto> findByTeamMessageRequest(
+  public Flux<ChatMessageDto> subscribeAndGetMessageRequest(
       @ApiIgnore
       Principal principal,
       @PathVariable Long teamId
   ) {
     return chatMessageService
-        .findAllByTeamId(Long.valueOf(principal.getName()), teamId)
+        .subscribeAndGetMsg(Long.valueOf(principal.getName()), teamId)
         .subscribeOn(Schedulers.boundedElastic());
   }
 
