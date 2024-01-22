@@ -122,7 +122,7 @@ export const TeamProfileBox = styled.div`
 
 export const Button = styled.button`
   padding: 8px 16px;
-  background-color: #5DD68E;
+  background-color: #5dd68e;
   color: white;
   border: none;
   border-radius: 20px;

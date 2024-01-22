@@ -74,6 +74,6 @@ export const MoveTeamPage = styled.div`
   margin: 20px;
   cursor: pointer;
   &:hover {
-    color: #a3cca3;
+    color: #5dd68e;
   }
 `;

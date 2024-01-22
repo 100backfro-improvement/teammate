@@ -22,5 +22,5 @@ const StyledSignInView = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-top: 200px;
+  padding-top: 70px;
 `;

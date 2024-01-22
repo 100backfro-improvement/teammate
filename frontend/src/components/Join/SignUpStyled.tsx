@@ -5,7 +5,7 @@ export const StyledContainer = styled.div`
   padding: 20px;
   max-width: 400px;
   margin: auto;
-  padding-top: 170px;
+  padding-top: 70px;
 `;
 
 export const StyledFormItem = styled.div`
