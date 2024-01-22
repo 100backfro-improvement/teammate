@@ -5,9 +5,9 @@ export const TeamLeaderContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  height: 100vh;
   margin-top: 10px;
-  padding-top: 80px;
+  margin-bottom: 50px;
+  padding-top: 20px;
 `;
 
 export const CenteredContainer = styled.div`
@@ -40,7 +40,7 @@ export const TeamLeaderModal = styled.div`
 export const StyledButton = styled.button`
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #5DD68E;
+  background-color: #5dd68e;
   color: white;
   border: none;
   border-radius: 20px;
@@ -111,10 +111,10 @@ export const MoveTeamPage = styled.div`
   text-align: right;
   margin-right: 100px;
   cursor: pointer;
-  padding-top: 100px;
+  padding-top: 30px;
 
   &:hover {
-    color: #a3cca3;
+    color: #5dd68e;
   }
 `;
 
