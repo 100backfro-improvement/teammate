@@ -22,8 +22,12 @@ const PersonalAlarm: React.FC<PersonalAlarmProps> = () => {
             message: item.message,
             createDt: item.createDt,
           }));
-          // 여러 개의 알람 데이터를 state에 설정
-          setAlarmData(alarms);
+
+          const sortedAlarms = alarms.sort(
+            (a: any, b: any) =>
+              new Date(b.createDt).getTime() - new Date(a.createDt).getTime(),
+          );
+          setAlarmData(sortedAlarms);
         } else {
           console.error("팀 알람 데이터가 비어 있거나 형식이 맞지 않습니다.");
         }

@@ -62,14 +62,18 @@ const TeamAlarm: React.FC<TeamAlarmProps> = () => {
       {alarms.length === 0 ? (
         <NoAlarmsMessage>알림이 없습니다.</NoAlarmsMessage>
       ) : (
-        alarms.map((alarm, index) => (
-          <AlarmContainer key={index}>
-            <AlarmContent>{alarm.content}</AlarmContent>
-            <DateInfo>
-              {new Date(alarm.date).toLocaleDateString("ko-KR")}
-            </DateInfo>
-          </AlarmContainer>
-        ))
+        alarms
+          .sort(
+            (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+          )
+          .map((alarm, index) => (
+            <AlarmContainer key={index}>
+              <AlarmContent>{alarm.content}</AlarmContent>
+              <DateInfo>
+                {new Date(alarm.date).toLocaleDateString("ko-KR")}
+              </DateInfo>
+            </AlarmContainer>
+          ))
       )}
     </div>
   );
