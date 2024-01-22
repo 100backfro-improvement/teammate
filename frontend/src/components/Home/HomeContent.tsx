@@ -151,6 +151,7 @@ const TeamListContainer = styled.div`
   gap: 16px;
   padding: 8px;
   margin-top: 24px;
+  width: 900px;
 `;
 
 const TeamItem = styled.li`
@@ -248,8 +249,8 @@ const Button = styled.span`
 
   &:hover {
     background-color: ${({ children }) =>
-      children === "참여하기" ? "#5dd68e" : "transparent"};
-    color: ${({ children }) => (children === "참여하기" ? "white" : "red")};
+      children === "참여하기" ? "#5dd68e" : "red"};
+    color: white;
   }
 
   @media (max-width: 600px) {
