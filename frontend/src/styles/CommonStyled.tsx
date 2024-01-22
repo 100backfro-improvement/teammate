@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const CommonSubmitBtn = styled.button`
-  background-color: #a3cca3;
+  background-color: #5dd68e;
 `;
 
 export const StyledLink = styled(Link)`
   text-decoration: none;
   &:hover {
-    color: #a3cca3;
+    color: #5dd68e;
   }
 `;

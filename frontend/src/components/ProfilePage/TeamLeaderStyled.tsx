@@ -64,7 +64,7 @@ export const TeamImageContainer = styled.div`
 export const TeamInfoContainer = styled.div`
   input,
   select {
-    width: 100px;
+    width: 120px;
     background-color: white;
     border: 1px solid #cccccc;
     border-radius: 10px;
@@ -128,7 +128,7 @@ export const Img = styled.img`
   width: 150px;
   height: 150px;
   cursor: pointer;
-  margin: 20px 0 20px 30px;
+  margin: 20px 0 20px 50px;
   border-radius: 20px;
 `;
 

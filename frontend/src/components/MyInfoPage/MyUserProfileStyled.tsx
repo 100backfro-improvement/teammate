@@ -28,7 +28,7 @@ export const UpdateButton = styled.button`
   border-radius: 20px;
 
   &:hover {
-    background-color: #a3cca3;
+    background-color: #5dd68e;
   }
 `;
 export const ErrorContainer = styled.div`
@@ -50,7 +50,7 @@ export const Button = styled.button`
   cursor: pointer;
   color: #333333;
   &:hover {
-    background-color: #a3cca3;
+    background-color: #5dd68e;
   }
 `;
 
