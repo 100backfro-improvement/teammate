@@ -11,10 +11,9 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
 
   const [messages, setMessages] = useState([]);
 
-  const messagesRef = useRef();
+  const messagesRef: React.MutableRefObject<any> = useRef();
 
   useEffect(() => {
-    // @ts-ignore
     messagesRef.current = messages;
     console.log("메시지state 변할때마다 effect >", messages);
   }, [messages]);
@@ -80,7 +79,11 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">
           채팅
         </h5>
-        <ChatBubble messages={messages} myTeamMemberId={myTeamMemberId} />
+        <ChatBubble
+          messages={messages}
+          teamId={teamId}
+          myTeamMemberId={myTeamMemberId}
+        />
         {/* <div className="p-3 mb-3 h-[32rem] overflow-y-auto font-normal bg-gray-50 text-gray-700">
           {messages.map((content, index) => {
             const { writerId, message, createdDt }: any = content;
