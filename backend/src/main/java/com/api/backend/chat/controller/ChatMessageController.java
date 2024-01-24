@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -80,7 +81,7 @@ public class ChatMessageController {
               , paramType = "path", defaultValue = "None", example = "1"
           )
       })
-  @GetMapping(value = "/list", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  @GetMapping(value = "/list")
   public Flux<ChatMessageDto> findByTeamMessageRequest(
       @ApiIgnore
       Principal principal,

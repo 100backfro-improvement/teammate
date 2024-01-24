@@ -5,7 +5,7 @@ import static com.api.backend.global.exception.type.ErrorCode.TEAM_PARTICIPANTS_
 import com.api.backend.chat.data.dto.ChatMessageDto;
 import com.api.backend.chat.data.dto.CreateChatMessageRequest;
 import com.api.backend.chat.data.entity.ChatMessage;
-import com.api.backend.chat.data.repository.ChatMessageRepository;
+import com.api.backend.chat.data.repository.ChatMessageReactRepository;
 import com.api.backend.global.exception.CustomException;
 import com.api.backend.team.data.repository.TeamParticipantsRepository;
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class ChatMessageService {
 
-  private final ChatMessageRepository chatMessageRepository;
+  private final ChatMessageReactRepository chatMessageReactRepository;
   private final TeamParticipantsRepository teamParticipantsRepository;
   public Flux<ChatMessageDto> subscribeAndGetMsg(Long memberId, Long teamId) {
 
@@ -31,7 +31,7 @@ public class ChatMessageService {
     LocalDateTime startDatetime = getStartDatetime(LocalDate.now());
     LocalDateTime endDatetime = getEndDatetime(LocalDate.now());
 
-    return chatMessageRepository.subscribeAndFindMessage(
+    return chatMessageReactRepository.subscribeAndFindMessage(
         teamId, startDatetime, endDatetime
         )
         .map(ChatMessageDto::from);
@@ -39,7 +39,7 @@ public class ChatMessageService {
 
   public Mono<ChatMessage> saveMessage(CreateChatMessageRequest createChatMessageRequest, Long teamId) {
 
-    return chatMessageRepository.save(
+    return chatMessageReactRepository.save(
         ChatMessage.builder()
             .writerId(createChatMessageRequest.getWriterId())
             .message(createChatMessageRequest.getMessage())
@@ -56,7 +56,7 @@ public class ChatMessageService {
     LocalDateTime startDatetime = getStartDatetime(date);
     LocalDateTime endDatetime = getEndDatetime(date);
 
-    return chatMessageRepository.findMessageByDate(
+    return chatMessageReactRepository.findMessageByDate(
             teamId, startDatetime, endDatetime
         )
         .map(ChatMessageDto::from);
