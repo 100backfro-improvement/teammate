@@ -67,7 +67,7 @@ public class TeamParticipantsService {
     mateParticipant.setTeamRole(TeamRole.LEADER);
     return UPDATE_ROLE_TEAM_PARTICIPANT;
   }
-
+  @Transactional
   public List<TeamParticipants> getTeamParticipants(Long teamId, Long memberId) {
     TeamParticipants teamParticipants = getTeamParticipantByTeamIdAndMemberId(teamId, memberId);
 
