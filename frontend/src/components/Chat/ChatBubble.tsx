@@ -6,6 +6,7 @@ import axiosInstance from "../../axios";
 const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
   const [items, setItems] = useState<any[]>([]);
   const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const today = new Date();
 
@@ -18,11 +19,14 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
     const response = await axiosInstance.get(
       `/team/${teamId}/chat/list?date=${oneDayAgo}`,
     );
+    if (page >= 10) {
+      setHasMore(false);
+      console.log("불러올까말까 작동!");
+      return;
+    }
     setItems([...items, ...response.data]);
-    // setItems(items.reverse());
     setPage(page + 1);
-    console.log("라이브러리 데이터 패치 >", response.data);
-    console.log("채팅 데이터 타입 >", typeof response.data);
+    console.log(page);
   };
 
   return (
@@ -30,7 +34,7 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
       <InfiniteScroll
         pageStart={0}
         loadMore={fetchData}
-        hasMore={true}
+        hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
             Loading ...
