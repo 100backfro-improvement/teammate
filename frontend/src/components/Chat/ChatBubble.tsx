@@ -31,6 +31,11 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
 
   return (
     <div className="p-3 mb-3 h-[32rem] overflow-y-auto font-normal bg-gray-50 text-gray-700">
+      {hasMore == false && (
+        <div className="bg-gray-200 text-center rounded-xl mb-3">
+          <p>마지막 메시지 입니다.</p>
+        </div>
+      )}
       <InfiniteScroll
         pageStart={0}
         loadMore={fetchData}
