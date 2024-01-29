@@ -10,6 +10,7 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
   const EventSource = EventSourcePolyfill || NativeEventSource;
 
   const [messages, setMessages] = useState([]);
+  const nicknames = { data: [] };
 
   const messagesRef: React.MutableRefObject<any> = useRef();
 
@@ -31,6 +32,25 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
       withCredentials: true,
     });
 
+    const getNickname = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `/team/${teamId}/participant/list`,
+        );
+        // console.log(response.data);
+        const nicknameArray = response.data.map((obj: any) => ({
+          [obj.teamParticipantsId]: obj.teamNickName,
+        }));
+        console.log(nicknameArray);
+        // setNicknames(nicknameArray);
+        // console.log("닉네임 스테이트", nicknames);
+        nicknames.data = nicknameArray;
+        console.log(nicknames);
+      } catch (error) {
+        console.error("팀원목록 불러오기 실패!", error);
+      }
+    };
+
     teamChat.onmessage = (event) => {
       console.log("받아온 데이터 >", event.data);
       console.log("stateRef ->", messagesRef.current);
@@ -41,6 +61,8 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
       //에러 발생시 할 동작
       teamChat.close(); //연결 끊기
     };
+
+    getNickname();
 
     return () => {
       teamChat.close();
@@ -83,6 +105,7 @@ const ChatView = ({ teamId, myTeamMemberId }: any) => {
           messages={messages}
           teamId={teamId}
           myTeamMemberId={myTeamMemberId}
+          nicknames={nicknames}
         />
         {/* <div className="p-3 mb-3 h-[32rem] overflow-y-auto font-normal bg-gray-50 text-gray-700">
           {messages.map((content, index) => {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import axiosInstance from "../../axios";
 
-const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
+const ChatBubble = ({ messages, teamId, myTeamMemberId, nicknames }: any) => {
   const [items, setItems] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -27,6 +27,7 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
     setItems([...items, ...response.data]);
     setPage(page + 1);
     console.log(page);
+    console.log("닉네임프롭>", nicknames);
   };
 
   return (
@@ -54,6 +55,10 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
           .map((content: any, index: any) => {
             const { writerId, message, createdDt }: any = content;
             const isMe = writerId === myTeamMemberId;
+            const matchedNickname = nicknames.data.find(
+              (obj: { [key: string]: string }) =>
+                obj.hasOwnProperty(`${writerId}`),
+            );
             return (
               <BubbleContainerDiv key={index} isMe={isMe}>
                 {/* <div key={index} className="flex items-start gap-2.5"> */}
@@ -67,7 +72,7 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
                 <div className="flex flex-col gap-1 w-56">
                   <div className="flex items-center space-x-2 rtl:space-x-reverse">
                     <span className="text-sm font-semibold text-gray-900">
-                      {writerId}
+                      {matchedNickname?.[`${writerId}`] || "(알 수 없음)"}
                     </span>
                     <span className="text-sm font-normal text-gray-500">
                       {/* createdDt.split(":00")[0].replace("T", " ").slice(0, -6)} */}
@@ -98,6 +103,9 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
       {messages.map((content: any, index: any) => {
         const { writerId, message, createdDt }: any = content;
         const isMe = writerId === myTeamMemberId;
+        const matchedNickname = nicknames.data.find(
+          (obj: { [key: string]: string }) => obj.hasOwnProperty(`${writerId}`),
+        );
 
         console.log("본인여부 >", isMe);
         return (
@@ -109,7 +117,7 @@ const ChatBubble = ({ messages, teamId, myTeamMemberId }: any) => {
             <div className="flex flex-col gap-1 w-56">
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <span className="text-sm font-semibold text-gray-900">
-                  {writerId}
+                  {matchedNickname?.[`${writerId}`] || "(알 수 없음)"}
                 </span>
                 <span className="text-sm font-normal text-gray-500">
                   {createdDt.split(":00")[0].replace("T", " ").slice(0, -6)}
